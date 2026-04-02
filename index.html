@@ -119,6 +119,7 @@ input::placeholder {
         <input type="text" placeholder="Name" id="user_name">
         <input type="text" placeholder="Email" id="user_email">
         <input type="text" placeholder="Phone" id="user_phone">
+        <div id="error"></div>
         <button id="order">Оформить</button>
     </form>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -126,6 +127,7 @@ input::placeholder {
         let tg = window.Telegram.WebApp;
         let buy = document.getElementById("buy");
         let order = document.getElementById("order");
+        tg.expand();
 
         buy.addEventListener("click", () => {
             document.getElementById("main").style.display = "none";
@@ -133,6 +135,19 @@ input::placeholder {
             document.getElementById("user_name").value = tg.initDataUnsafe.user.first_name + "";
         });
         order.addEventListener("click", () => {
+            let name = document.getElementById("user_name").value;
+            let email = document.getElementById("user_email").value;
+            let phone = document.getElementById("user_phone").value;
+            if(name.length < 5){
+                document.getElementById("error").innerText = "Ошибка ввода"
+            }
+
+            let data = {
+                name: name,
+                email: email,
+                phone: phone
+            }
+            tg.sendData(JSON.stringify(data))
             tg.close();
         });
     </script>
